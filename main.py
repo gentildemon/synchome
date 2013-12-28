@@ -2,10 +2,9 @@ import appindicator
 import notifier
 
 import gui
+from profile import ProfilesList
 
 APP_NAME="SyncHome"
-
-
 
 
 def main():
