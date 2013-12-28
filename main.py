@@ -2,6 +2,7 @@ import appindicator
 import notifier
 
 import gui
+import sync
 from profile import ProfilesList
 
 APP_NAME="SyncHome"
@@ -9,6 +10,7 @@ APP_NAME="SyncHome"
 
 def main():
     my_notifier = notifier.Notifier(APP_NAME)
+    my_synchronizer = sync.Synchronizer(my_notifier)
 
     ind = appindicator.Indicator(APP_NAME,
                                  "network-idle",
@@ -17,11 +19,9 @@ def main():
     ind.set_attention_icon("network-error")
 
     profiles = ProfilesList.GetProfiles()
-    for profile in profiles:
-        profile.print_info()
 
     # create a menu
-    app = gui.AppMenu()
+    app = gui.AppMenu(my_synchronizer)
     menu = app.create_main_menu(profiles)
     ind.set_menu(menu)
 

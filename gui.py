@@ -6,34 +6,41 @@ from filebrowser import OpenFileBrowser
 
 ICON_OK="/usr/share/icons/gnome/48x48/emblems/emblem-default.png"
 
+BROWSE_LOCAL_LABEL = 'Explorer'
+BROWSE_REMOTE_LABEL = 'Explorer sur le serveur'
 
+SYNC_AUTO_LABEL = 'Synchroniser'
+SYNC_NOAUTO_LABEL = 'Synchroniser (interactif)'
+
+SYNC_ALL_LABEL = 'Tout synchroniser'
+EXIT_LABEL = 'Quitter'
 
 class AppMenu():
 
+    __synchronizer = None
+
+    def __init__(self, synchronizer):
+        AppMenu.__synchronizer = synchronizer
 
     def get_profile_submenu(self, profile):
         menu = gtk.Menu()
 
-        browse_label = "Explorer"
-        item = gtk.MenuItem(browse_label)
+        item = gtk.MenuItem(BROWSE_LOCAL_LABEL)
         item.connect("activate", AppMenu.BrowseLocalDir, profile)
         menu.append(item)
 
-        browse_label = "Explorer sur le serveur"
-        item = gtk.MenuItem(browse_label)
+        item = gtk.MenuItem(BROWSE_REMOTE_LABEL)
         item.connect("activate", AppMenu.BrowseRemoteDir, profile)
         menu.append(item)
 
         separator = gtk.SeparatorMenuItem()
         menu.append(separator)
 
-        sync_label = "Synchroniser"
-        item = gtk.MenuItem(sync_label)
+        item = gtk.MenuItem(SYNC_AUTO_LABEL)
         item.connect("activate", AppMenu.SyncProfile, profile, True)
         menu.append(item)
 
-        sync_term_label = "Synchroniser (interactif)"
-        item = gtk.MenuItem(sync_term_label)
+        item = gtk.MenuItem(SYNC_NOAUTO_LABEL)
         item.connect("activate", AppMenu.SyncProfile, profile, False)
         menu.append(item)
 
@@ -41,12 +48,11 @@ class AppMenu():
 
     def get_profile_menuitem(self, profile):
         submenu = self.get_profile_submenu(profile)
-        myimage = gtk.image_new_from_file(ICON_OK)
 
         item = gtk.ImageMenuItem(profile.getname())
-        item.set_image(myimage)
         item.set_always_show_image(True)
-        #update_status(item)
+
+        AppMenu.UpdateProfileStatus(item, profile)
 
         item.set_submenu(submenu)
         return item
@@ -61,22 +67,35 @@ class AppMenu():
         separator = gtk.SeparatorMenuItem()
         menu.append(separator)
 
-        synchro_all_label = "Tout synchroniser"
-        menu_item = gtk.MenuItem(synchro_all_label)
+        menu_item = gtk.MenuItem(SYNC_ALL_LABEL)
         menu.append(menu_item)
         menu_item.connect("activate", AppMenu.SyncAll)
 
         separator = gtk.SeparatorMenuItem()
         menu.append(separator)
 
-        exit_label = "Quitter"
-        menu_item = gtk.MenuItem(exit_label)
+        menu_item = gtk.MenuItem(EXIT_LABEL)
         menu.append(menu_item)
         menu_item.connect("activate", AppMenu.ExitMenu)
 
         menu.show_all()
 
         return menu
+
+    @classmethod
+    def UpdateProfileStatus(cls, menu_item, profile):
+        status = profile.getstatus()
+        if status == Profile.OK:
+            icon = ICON_OK
+        elif status == Profile.ERROR:
+            icon = ICON_ERROR
+        else:
+            icon = ICON_UNKNOWN
+
+        image = menu_item.get_image()
+        image.set_from_file(icon)
+        image.show()
+        menu_item.set_label(profile.getname() + " (" + profile.getupdatetime() + ")")
 
     @classmethod
     def BrowseLocalDir(cls, menuitem, profile):
@@ -88,7 +107,7 @@ class AppMenu():
 
     @classmethod
     def SyncProfile(cls, menuitem, profile, auto):
-        print "%s : %s" % (profile.getname(), auto)
+        cls.__synchronizer.sync(profile, auto)
 
     @classmethod
     def SyncAll(*args):

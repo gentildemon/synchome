@@ -28,13 +28,18 @@ class ProfileParser():
 
 class Profile():
 
+    OK = 'Ok'
+    ERROR = 'Error'
+    UNKNOWN = 'Unknown'
+
     def __init__(self, name, localdir, remotedir, statusfile):
         self.__name = name
         self.__localdir = localdir
         self.__remotedir = remotedir
-        self.__status = 'unknown'
+        self.__status = Profile.UNKNOWN
         self.__utime = 'unknown'
-        self.init_status_from_file(statusfile)
+        self.__statusfile = statusfile
+        self.init_status()
 
     def getname(self):
         """Return the name of the profile"""
@@ -46,12 +51,27 @@ class Profile():
     def getremotedir(self):
         return self.__remotedir
 
-    def init_status_from_file(self, statusfile):
+    def getstatus(self):
+        return self.__status
+
+    def getupdatetime(self):
+        return self.__utime
+
+    def init_status(self):
         date = ""
-        with open(statusfile) as sf:
+        with open(self.__statusfile) as sf:
             content = sf.readlines()
+            status = content[0][:-1]
             self.__status = content[0][:-1]
             self.__utime = content[1][:-1]
+
+    def update_status(self, retcode, currenttime):
+        if retcode == 0:
+            self.__status = Profile.OK
+        else:
+            self.__status = Profile.ERROR
+        with open(self.__statusfile, 'w') as sf:
+            sf.writelines((self.__status, currenttime.strftime("%A %e %B, %X")))
 
     def print_info(self):
         print "[%s]\n local = %s\n remote = %s" % (self.getname(),
