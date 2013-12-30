@@ -22,17 +22,15 @@ def main():
 
     profiles = ProfilesList.GetProfiles()
 
-    # create a menu
     app = gui.AppMenu(my_synchronizer, profiles)
     menu = app.get_main_menu()
     ind.set_menu(menu)
-
-    # prepare signal handler
-    #signal.signal(signal.SIGHUP, signal_handler)
-    #save_pid()
 
     app.main()
 
 
 if __name__ == "__main__":
-    main()
+    try:
+        main()
+    except KeyboardInterrupt:
+        print "Exiting..."
