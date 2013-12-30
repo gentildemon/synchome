@@ -3,7 +3,7 @@
 import appindicator
 import notifier
 
-import gui
+import app_menu
 import sync
 from profile import ProfilesList
 
@@ -22,7 +22,7 @@ def main():
 
     profiles = ProfilesList.GetProfiles()
 
-    app = gui.AppMenu(my_synchronizer, profiles)
+    app = app_menu.AppMenu(my_synchronizer, profiles)
     menu = app.get_main_menu()
     ind.set_menu(menu)
 
