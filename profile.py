@@ -59,19 +59,23 @@ class Profile():
 
     def init_status(self):
         date = ""
-        with open(self.__statusfile) as sf:
-            content = sf.readlines()
-            status = content[0][:-1]
-            self.__status = content[0][:-1]
-            self.__utime = content[1][:-1]
+        try:
+            with open(self.__statusfile) as sf:
+                content = sf.readlines()
+                status = content[0][:-1]
+                self.__status = content[0][:-1]
+                self.__utime = content[1][:-1]
+        except Exception as exc:
+            print "Fail to read status for profile %s: %s" % (self.__name, exc)
 
     def update_status(self, retcode, currenttime):
+        self.__utime = currenttime.strftime("%A %e %B, %X")
         if retcode == 0:
             self.__status = Profile.OK
         else:
             self.__status = Profile.ERROR
         with open(self.__statusfile, 'w') as sf:
-            sf.writelines((self.__status, currenttime.strftime("%A %e %B, %X")))
+            sf.write("%s\n%s\n" % (self.__status, self.__utime))
 
     def print_info(self):
         print "[%s]\n local = %s\n remote = %s" % (self.getname(),

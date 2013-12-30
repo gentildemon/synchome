@@ -1,3 +1,5 @@
+# coding=utf-8
+
 import appindicator
 import notifier
 
@@ -21,8 +23,8 @@ def main():
     profiles = ProfilesList.GetProfiles()
 
     # create a menu
-    app = gui.AppMenu(my_synchronizer)
-    menu = app.create_main_menu(profiles)
+    app = gui.AppMenu(my_synchronizer, profiles)
+    menu = app.get_main_menu()
     ind.set_menu(menu)
 
     # prepare signal handler
