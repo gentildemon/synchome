@@ -4,9 +4,9 @@ import profile as Profile
 
 from filebrowser import OpenFileBrowser
 
-ICON_OK="/usr/share/icons/gnome/48x48/emblems/emblem-default.png"
-ICON_ERROR="/usr/share/icons/gnome/scalable/status/dialog-error-symbolic.svg"
-ICON_UNKNOWN="/usr/share/icons/gnome/scalable/status/dialog-warning-symbolic.svg"
+ICON_OK = "/usr/share/icons/gnome/48x48/emblems/emblem-default.png"
+ICON_ERROR = "/usr/share/icons/gnome/scalable/status/dialog-error-symbolic.svg"
+ICON_UNKNOWN = "/usr/share/icons/gnome/scalable/status/dialog-warning-symbolic.svg"
 
 BROWSE_LOCAL_LABEL = 'Explorer'
 BROWSE_REMOTE_LABEL = 'Explorer sur le serveur'
@@ -88,14 +88,14 @@ class AppMenu():
 
         return menu
 
-    def sync_profile(self, menuitem, parent_menu_item, profile, auto):
+    def sync_profile(self, _menuitem, parent_menu_item, profile, auto):
         self.__synchronizer.sync(profile, auto)
         self.update_profile_status(parent_menu_item, profile)
 
-    def sync_all(self, menuitem):
+    def sync_all(self, _menuitem = None):
         self.__synchronizer.sync_all(self.__profiles)
         for profile in self.__profiles:
-            for item in menuitem.parent.children():
+            for item in self.__main_menu.children():
                 if item.get_label().startswith("%s (" % profile.getname()):
                     self.update_profile_status(item, profile)
 
@@ -114,14 +114,14 @@ class AppMenu():
         menu_item.set_label(profile.getname() + " (" + profile.getupdatetime() + ")")
 
     @classmethod
-    def BrowseLocalDir(cls, menuitem, profile):
+    def BrowseLocalDir(cls, _menuitem, profile):
         OpenFileBrowser(profile.getlocaldir())
 
     @classmethod
-    def BrowseRemoteDir(cls, menuitem, profile):
+    def BrowseRemoteDir(cls, _menuitem, profile):
         OpenFileBrowser(profile.getremotedir())
 
-    def exit(*args):
+    def exit(self, _menuitem):
         gtk.main_quit()
 
     def main(self):

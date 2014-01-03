@@ -2,9 +2,9 @@ import notify2
 
 class Notifier():
 
-    ICON_ERROR="/usr/share/icons/gnome/scalable/status/network-error-symbolic.svg"
-    ICON_REFRESH="/usr/share/icons/gnome/scalable/actions/view-refresh-symbolic.svg"
-    ICON_OK="/usr/share/icons/gnome/scalable/emblems/emblem-default-symbolic.svg"
+    ICON_ERROR = "/usr/share/icons/gnome/scalable/status/network-error-symbolic.svg"
+    ICON_REFRESH = "/usr/share/icons/gnome/scalable/actions/view-refresh-symbolic.svg"
+    ICON_OK = "/usr/share/icons/gnome/scalable/emblems/emblem-default-symbolic.svg"
 
     def __init__(self, app_name):
         notify2.init(app_name)

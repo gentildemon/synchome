@@ -62,7 +62,6 @@ class Profile():
         try:
             with open(self.__statusfile) as sf:
                 content = sf.readlines()
-                status = content[0][:-1]
                 self.__status = content[0][:-1]
                 self.__utime = content[1][:-1]
         except Exception as exc:
