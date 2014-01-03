@@ -5,9 +5,12 @@ import notifier
 
 import app_menu
 import sync
+
+import network
+
 from profile import ProfilesList
 
-APP_NAME="SyncHome"
+APP_NAME = "SyncHome"
 
 
 def main():
@@ -25,6 +28,15 @@ def main():
     app = app_menu.AppMenu(my_synchronizer, profiles)
     menu = app.get_main_menu()
     ind.set_menu(menu)
+
+    def sync_all(connected):
+        if connected == True:
+            app.sync_all()
+
+    nm = network.Network()
+    sync_all(nm.is_connected())
+
+    nm.listen_to_state_changes(sync_all)
 
     app.main()
 
