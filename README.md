@@ -1,15 +1,16 @@
-SyncHome
-========
+# SyncHome
 
+## Description
 SyncHome allows to synchronize your Unison profiles each time the network becames available.
 
 A GUI is available in the systray, and allows exploring/synchronizing each profile.
 
 Unison profiles must be already configured in $HOME/.unison/
 
-Currently, it only supports Ubuntu Linux.
+## Supported systems
+* Ubuntu Linux
 
-Dependencies:
+## Dependencies
 * Python 2.7
 * python-dbus
 * NetworkManager
